@@ -74,7 +74,7 @@ I will be updating the repo as I continue on through the levels.
 - Issuing `ls` shows a directory named *inhere*
 - Moving into the directory with `cd` and issuing `ls` again shows 10 files:
 	- *-file00*
-	- *-file01
+	- *-file01*
 	- *-file02*
 	- *-file03*
 	- *-file04*
