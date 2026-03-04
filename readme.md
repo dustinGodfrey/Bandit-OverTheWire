@@ -1,9 +1,16 @@
 
+# Overview
+
+This is my personal notes and walkthrough of OverTheWire's wargame "Bandit". I am using this to document my thoughts, methodologies, findings, and takeaways from each level of this game. It will not only strengthen my linux skills, but also my reconnaissance and problem-solving skills as well.
+
+I will be updating the repo as I continue on through the levels.
+
+>[!Important] As per the request of OverTheWire I will not be publishing credentials from any level. This is purely for a learning journey.
+
+
 # Level 0
 
 - Login to the bandit server over port 2220.
-	- Username: bandit0
-	- Password: bandit0
 
 `ssh bandit0@bandit.labs.overthewire.org -p 2220`
 
@@ -19,8 +26,6 @@
 `cat readme`
 
 - This shows the password for the next level.
-	- ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If
-		- Username: bandit1
 
 
 # Level 1 - Level 2
@@ -44,8 +49,6 @@
 
 - Using this I decided to try the `cat` command again using the same logic, this led to the password flag being shown:
 	- `cat /home/bandit1/-`
-		- 263JGJPfgU6LtdEvgfWU1XP5yac29mFx
-			- Username: bandit2
 
 
 # Level 2 - Level 3
@@ -54,8 +57,6 @@
 - Issuing `ls` shows us a file with the name *--spaces in this filename--*
 - Using `cat ` and the full path including escape characters for the spaces I was able to extract the password:
 	- `cat /home/bandit2/--spaces\ in\ the\ filename--`
-		- MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
-			- Username: bandit3
 
 
 # Level 3 - Level 4
@@ -66,8 +67,6 @@
 - This showed one hidden file named *...Hiding-From-You*
 - Using `cat` on this file I was able to extract the password:
 	- `cat ./...Hiding-From-You`
-		- 2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ
-			- Username: bandit4
 
 
 # Level 4 - Level 5
@@ -96,8 +95,6 @@
 		- "If more than a single file is specified, or if the -v option is used, each file is preceded by a header consisting of the string ==> XXX <== where XXX is the name of the file."
 
 - Issuing `tail -n +1 /home/bandit4/inhere/-file*` shows the extracted password, located in the file named *-file07*
-	- 4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw
-		- Username: bandit5
 
 
 # Level 5 - Level 6
