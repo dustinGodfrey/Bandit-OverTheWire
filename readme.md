@@ -99,4 +99,59 @@ I will be updating the repo as I continue on through the levels.
 
 # Level 5 - Level 6
 
-- 
+- Issuing `ls` showed me another directory named *inhere*
+- changing directory `cd` into *inhere* and issuing `ls` again revealed 20 directories, named *maybehere00* through *maybehere19*
+- Issuing `ls` on a few of these directories I found that they all followed the same file pattern, containing 9 files:
+	- -file1*
+	- .file1*
+	- -file2
+	- .file2
+	- -file3*
+	- .file3*
+	- spaces file1*
+	- spaces file2
+	- spaces file3*
+
+- I did not want to have to manually go through all of these directories and files so I started researching a way to recursively search a directory, its subdirectories, and files.
+
+- I ended up solving this level 2 different ways. The first way was of my own theory, and the second was after reading the level hints from OnTheWire and reading a different walkthrough.
+
+#### Solution 1
+- My theory for this solution was due to the fact that every password flag until this point were all a fixed length, 32 characters long. Using this I decided to research how to recursively search for strings of a fixed length.
+- This led me to diving into the linux tools **find** and **awk**.
+	- **find** is a way to search through the directory tree based on certain parameters given to it. I wanted to recursively print all files within all directories
+	- **awk** is used for pattern scanning and processing. I wanted to pipe the output of the **find** command into **awk**, giving me the ability to print every file within each subdirectory and search for strings with a fixed length of 32 characters. 
+
+	- `find . -type f -exec cat {} \; | awk 'length($0) == 32'`
+		- **find .** - search starting from the current location
+		- **-type f** - search through files
+		- **-exec cat {}** - Executes the `cat` command on every file, addend filename to each
+
+		- **awk 'length($0) == 32'** - searches each entry for a string of length 32
+
+- This gave me only 1 output, a string of 32 characters that looked like the other passwords
+- To find the subdirectory and filename that contained this string,  **grep** was used:
+	- `grep -r "<password_string>" .`
+		- **grep -r "string" .** - Search recursively for the string starting from current directory.
+
+- This gave me only 1 output
+	- ./maybehere07/.file2:<password_string>
+
+#### Solution 2
+
+- Once I solved the puzzle using Solution 1 I went to the official OverTheWire page for the level and realized that they gave me 3 criteria to use when searching for the file:
+	- The file is human-readable
+	- It is not an executable file
+	- It has a size of 1033 bytes
+
+- Reading the `man find` page, each of these requirements can be used as arguments using **find**
+- `find -type f -readable ! -executable -size 1033c`
+	- **find type f** - find files
+	- **-readable** - file must be readable by the user
+	- **! -executable** - '!' is used to signify NOT, not executable
+	- **-size 1033c** - searches for files of size 1033, 'c' is used for bytes
+
+- This gave me only one output:
+	- ./inhere/maybehere07/.file2
+
+- This is the same location I found during Solution 1. Just to double check, using `cat` on that file revealed the same password I found in Solution 1.
