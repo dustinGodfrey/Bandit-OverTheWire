@@ -1,7 +1,7 @@
 
 # Overview
 
-This is my personal notes and walkthrough of OverTheWire's wargame "Bandit". I am using this to document my thoughts, methodologies, findings, and takeaways from each level of this game. It will not only strengthen my linux skills, but also my reconnaissance and problem-solving skills as well.
+This is my personal notes and walkthrough of OverTheWire's wargame "Bandit". Bandit was created to learn and practice command line and security concepts. I am using this to document my thoughts, methodologies, findings, and takeaways from each level of this game. It will not only strengthen my linux skills, but also my reconnaissance, security, and problem-solving skills as well.
 
 I will be updating the repo as I continue on through the levels.
 
