@@ -73,16 +73,16 @@ I will be updating the repo as I continue on through the levels.
 
 - Issuing `ls` shows a directory named *inhere*
 - Moving into the directory with `cd` and issuing `ls` again shows 10 files:
-	*-file00*
-	*-file01*
-	*-file02*
-	*-file03*
-	*-file04*
-	*-file05*
-	*-file06*
-	*-file07*
-	*-file08*
-	*-file09*
+	- *-file00*
+	- *-file01*
+	- *-file02*
+	- *-file03*
+	- *-file04*
+	- *-file05*
+	- *-file06*
+	- *-file07*
+	- *-file08*
+	- *-file09*
 
 - My first thought was to cat out each file, but I wanted to see if I could do it more efficiently.
 - I started out by issuing:
@@ -102,15 +102,15 @@ I will be updating the repo as I continue on through the levels.
 - Issuing `ls` showed me another directory named *inhere*
 - changing directory `cd` into *inhere* and issuing `ls` again revealed 20 directories, named *maybehere00* through *maybehere19*
 - Issuing `ls` on a few of these directories I found that they all followed the same file pattern, containing 9 files:
-	-file1*
-	-file1*
-	-file2
-	.file2
-	-file3*
-	.file3*
-	spaces file1*
-	spaces file2
-	spaces file3*
+	- -file1*
+	- .file1*
+	- -file2
+	- .file2
+	- -file3*
+	- .file3*
+	- spaces file1*
+	- spaces file2
+	- spaces file3*
 
 - I did not want to have to manually go through all of these directories and files so I started researching a way to recursively search a directory, its subdirectories, and files.
 
@@ -135,7 +135,7 @@ I will be updating the repo as I continue on through the levels.
 		- **grep -r "string" .** - Search recursively for the string starting from current directory.
 
 - This gave me only 1 output
-	 *./maybehere07/.file2:<password_string>*
+	- ./maybehere07/.file2:<password_string>
 
 #### Solution 2
 
@@ -174,7 +174,7 @@ I will be updating the repo as I continue on through the levels.
 	- `find . -size 33c -user bandit7 -group bandit6`
 
 - This returned several dozen responses, all giving a "Permission Denied" warning, except for 1 file:
-	 *./var/lib/dpkg/info/bandit7.password*
+	- *./var/lib/dpkg/info/bandit7.password*
 
 - Issuing `cat ./var/lib/dpkg/info/bandit7.password` I was able to extract the correct password
 
@@ -188,7 +188,7 @@ I will be updating the repo as I continue on through the levels.
 	- `grep millionth data.txt` to search for any lines containing "millionth" in the file *data.txt*
 
 - This returned only one line:
-	*millionth    <password_string>*
+	- *millionth    <password_string>*
 
 
 # Level 8 - Level 9
@@ -216,7 +216,7 @@ I will be updating the repo as I continue on through the levels.
 - Issuing `ls` shows one file, *data.txt*
 - Per the OverTheWire documentation, the password is stored in the file as one of the few human-readable strings, preceded by several '=' characters
 - Issuing `cat data.txt | grep '=='` returns an error:
-	*grep: (standard input): binary file matches*
+	- *grep: (standard input): binary file matches*
 
 - Researching this led me to learn that **grep** does not automatically search binary files, but it will with the tag **-a**
 - Issuing `cat data.txt | grep -a '=='` showed me less binary, but still a wall of binary. Only now I could see a few strings including one that looked like the password.
@@ -226,9 +226,9 @@ I will be updating the repo as I continue on through the levels.
 - I decided to pipe this output into **grep** to see if I could pull out any more information
 
 - Issuing `strings data.txt | grep '=='` returned 4 lines:
-	*========== the*
-	*========== password*
-	*========== is*
-	*========== <password_string>*
+	- *========== the*
+	- *========== password*
+	- *========== is*
+	- *========== <password_string>*
 
 
