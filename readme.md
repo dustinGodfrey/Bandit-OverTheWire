@@ -177,3 +177,15 @@ I will be updating the repo as I continue on through the levels.
 	- *./var/lib/dpkg/info/bandit7.password*
 
 - Issuing `cat ./var/lib/dpkg/info/bandit7.password` I was able to extract the correct password
+
+
+# Level 7 - Level 8
+
+- Issuing `ls` shows only one file, *data.txt*
+- Issuing `cat data.txt | wc -l` shows that we have 98,567 lines in this file
+- Per the OverTheWire documentation, this level's password is located next to the word "millionth"
+- Knowing that **grep** can be used to locate lines based on a keyword, I issued:
+	- `grep millionth data.txt` to search for any lines containing "millionth" in the file *data.txt*
+
+- This returned only one line:
+	- *millionth    <password_string>*
