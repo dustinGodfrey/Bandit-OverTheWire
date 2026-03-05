@@ -190,3 +190,23 @@ I will be updating the repo as I continue on through the levels.
 - This returned only one line:
 	- *millionth    <password_string>*
 
+
+# Level 8 - Level 9
+
+- Issuing `ls` shows one file, *data.txt*
+- Issuing `cat data.txt | wc -l` shows that we have 1001 lines in this file
+- Per the OverTheWire documentation, this level's password is the only line of text in the file that occurs only one time
+
+- Researching finding unique lines in a file led me to the tool **uniq**, which will report or omit repeated lines
+- At the bottom of the `man uniq` page there is a line that states:
+	- "'uniq' does not detect repeated lines unless they are adjacent.
+       You may want to sort the input first..."
+
+- Reading this I researched how to sort lines in a file and was led to the tool **sort**
+
+- I was able to sort the list, then pipe that into **uniq**:
+	- `sort data.txt | uniq -c`
+		- **-c** argument is used to prefix lines by the number of occurrences
+
+- This gave me a list of strings, all prefixed by the number 10, except for one line that was prefixed with the number 1; this is our password string
+
