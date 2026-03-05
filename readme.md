@@ -155,3 +155,25 @@ I will be updating the repo as I continue on through the levels.
 	- ./inhere/maybehere07/.file2
 
 - This is the same location I found during Solution 1. Just to double check, using `cat` on that file revealed the same password I found in Solution 1.
+
+
+# Level 6 - Level 7
+
+- This level was solved in a similar way to the last level, with a few more steps
+- Issuing `ls` gives no files in the bandit6 home directory
+- As per the OverTheWire documentation, the password is stored somewhere on the server and has the following properties:
+	- owned by user bandit7
+	- owned by group bandit6
+	- 33 bytes in size
+
+- These parameters led me to believe that using **find** was the appropriate method
+- I knew that since the file was stored somewhere on the server I would be performing the **find** search from the top of the file tree in the root `/` directory. So I navigated there with:
+	- `cd /`
+
+- Once in the root directory, and after researching the **find** manual page, I was able to craft this command
+	- `find . -size 33c -user bandit7 -group bandit6`
+
+- This returned several dozen responses, all giving a "Permission Denied" warning, except for 1 file:
+	- *./var/lib/dpkg/info/bandit7.password*
+
+- Issuing `cat ./var/lib/dpkg/info/bandit7.password` I was able to extract the correct password
