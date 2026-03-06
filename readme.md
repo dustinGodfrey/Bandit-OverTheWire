@@ -243,5 +243,28 @@ I will be updating the repo as I continue on through the levels.
 	- *The password is <password_string>*
 
 
+# Level 11 - Level 12
 
+- Issuing `ls` shows one file, *data.txt*
+- According to OverTheWire documentation, every character in the string, both uppercase and lowercase, needs to shift 13 positions.
+- A 13-position character shift is a cipher known as ROT13, a type of Caesar Cipher
+- Researching how to shift characters in a string led me to the tool **tr**, which is a tool for translating or deleting characters based on specific arrays given as arguments.
+
+- Per the `man tr` page and also the `info tr` page, each array string should be a range of characters. I assumed I could just shift everything over 13 easily with the following command:
+	- `cat data.txt | tr [a-z] [n-a]`
+		- This did not work as **tr** does not accept a range that wraps back around the alphabet.
+		- I tried many combinations of this command, some getting closer than others, but none fully translating the string. The closest result I received was:
+			- *G]] p]sswrd] ]s <password_string>*
+				- Not the expected output.
+		- No matter how many combinations I tried, nothing would work 100%.
+		- This led me to search through more documentation, eventually leading me back to the `info tr` page, but at the bottom of the page, away from the explanation of ranges and substitutions, and was only a single line that gave away what I needed to do:
+			- `tr -cs A-Za-z0-9 '\012'`
+				- This showed me that each range array string could be a series of ranges in one, not just one range per string.
+				- Using this, and more trial and error, I was able to finally craft a successful command.
+					- `cat data.txt | tr [A-Za-z] [N-ZA-Mn-za-m]`
+						- The first string `[A-Za-z]` means "replace every uppercase letter A-Z and every lowercase letter a-z"
+						- The second string is what to replace string 1 with [N-ZA-Mn-za-m]
+							- Since **tr** does not take wrapping, you need to manually set the wrap yourself, so N-Z then adding A-M will get back around to the original place in the alphabet; A-Z = 26, N-Z(13) + A-M(13) = 26
+						- The result of the above command was:
+							- *The password is <password_string>*
  
