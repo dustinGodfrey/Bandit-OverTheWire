@@ -232,3 +232,16 @@ I will be updating the repo as I continue on through the levels.
 	- *========== <password_string>*
 
 
+# Level 10 - Level 11
+
+- Issuing `ls` shows one file, *data.txt*
+- `cat data.txt` shows a long string of characters, longer than our password flag usually has
+- According to OverTheWire documentation, this file contains base64 data. This can be confirmed with the above `cat` command, the output ends in `==`, which is padding for base64 encoded strings.
+
+- `man base64` explains how to decode base64 strings with the tag **-d** 
+- Issuing `base64 -d data.txt` reveals the string:
+	- *The password is <password_string>*
+
+
+
+ 
