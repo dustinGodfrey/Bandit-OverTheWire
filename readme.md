@@ -268,3 +268,76 @@ I will be updating the repo as I continue on through the levels.
 						- The result of the above command was:
 							- *The password is <password_string>*
  
+
+# Level 12 - Level 13
+
+- Instructions from OverTheWire
+> The password for the next level is stored in the file *data.txt*, which is a hexdump of a file that has been repeatedly compressed. For this level it may be useful to create a directory under /tmp in which you can work. Use `mkdir` with a hard to guess directory name. Or better, use the command `mktemp -d`. Then copy the datafile using cp, and rename it using mv (read the manpages!)
+
+- Issuing `ls` I can confirm there is a file titled *data.txt*
+- Issuing `cat data.txt` I can confirm that this is a hexdump
+- Per the instructions I created a directory in the */tmp* directory with `mktemp -d` which prints the directory name. I copy the file and move into the directory
+	- `cp data.txt /tmp/tmp.NxbNDs4Duq`
+	- `cd /tmp/tmp.NxbNDs4Duq`
+
+- Researching how to reverse a hexdump I found the tool **xxd**
+- Per the `man xxd` page I can revert a hexdump with a `-r` flag.
+- `xxd -r data.txt data2.txt`
+	- This will revert the hexdump of *data.txt* and output the results to *data2.txt*
+
+- Issuing `file data2.txt` reveals that this is a gzip compressed file
+
+- Per the `man gzip` page I can see that you unzip a gzip file and send output to new file with:
+	- `gunzip -c data2.txt > data3.txt`
+
+- Issuing `file data3.txt` reveals that this is a bzip2 compressed file
+
+- Per the `man bzip2` page, we can decompress this file in a similar manner to the last:
+	- `bunzip2 -c data3.txt > data4.txt`
+
+- Issuing `file data4.txt` reveals that this is another gzip compressed file
+
+- Again we will run the gunzip command:
+	- `gunzip -c data4.txt > data5.txt`
+
+- Issuing `file data5.txt` reveals this is a POSIX tar archive
+
+- Per the `man tar` page, we can extract the tar archive but it needs to have a *.tar* file extension
+	- `cp data5.txt data5.tar`
+
+- Now we can perform the extraction on the new tar archive *data5.tar*
+	- `tar -xf data5.tar`
+		- `-x` will extract
+		- `-f` tells tar that it is a file
+
+	- This will create a new file named *data5.bin*
+
+- Issuing `file data5.bin` reveals it is still a tar archive, just now in binary format
+
+- Again we will issue the same **tar** command, but now on the binary file:
+	- `tar -xf data5.bin`
+
+	- This will create a new file named *data6.bin*
+
+- Issuing `file data6.bin` reveals that it is another bzip2 compressed file
+
+- Like earlier we will unzip this file:
+	- `bunzip2 -c data6.bin > data7.txt`
+
+- Issuing `file data7.txt` reveals it is another tar archive
+
+- Again we will follow the same steps as earlier:
+	- `cp data7.txt data7.tar`
+	- `tar -xf data7.tar`
+
+	- This created a new file *data8.bin*
+
+- Issuing `file data8.bin` reveals it to be a gzip compressed file
+
+- Like earlier, we will uncompress this file with:
+	- `gunzip -c data8.bin > data9.txt
+
+- Issuing `file data9.txt` reveals it to be an ASCII text file
+
+- Issuing `cat data9.txt` finally reveals our password:
+	- *The password is <password_string>*
