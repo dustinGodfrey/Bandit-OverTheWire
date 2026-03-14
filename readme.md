@@ -435,4 +435,4 @@ openssl s_client -crlf \
 
 - Issuing `<bandit15_password_string>` gets a return:
 	- *Correct!*
-	- *<bandit_16_password_string>*
+	- *<bandit16_password_string>*
