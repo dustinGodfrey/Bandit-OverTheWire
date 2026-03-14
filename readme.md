@@ -373,3 +373,7 @@ I will be updating the repo as I continue on through the levels.
 - We can now login to bandit14 with our key with new permissions:
 	- `ssh bandit14@bandit.labs.overthewire.org -p 2220 sshkey.private`
 		- This successfully logs us in to bandit14
+
+- Once inside bandit14, you can issue the following command to display the password, you will need it for the next level:
+	- `cat /etc/bandit_pass/bandit14`
+		- <password_string>
