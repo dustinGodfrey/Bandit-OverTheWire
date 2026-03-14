@@ -377,3 +377,30 @@ I will be updating the repo as I continue on through the levels.
 - Once inside bandit14, you can issue the following command to display the password, you will need it for the next level:
 	- `cat /etc/bandit_pass/bandit14`
 		- <password_string>
+
+
+# Level 14 - Level 15
+
+- Instructions from OverTheWire:
+> The password for the next level can be retrieved by submitting the password of the current level to **port 30000 on localhost**.
+
+- Researching how to send data or strings to a port led me to the tool **netcat**
+	- **Netcat** is a way to open connections to certain ports on a machine in order to send and receive data. It is usually set up with a listener and a sender
+
+- Attempting to set up a listener, `netcat -l -p 30000` I get the following error message:
+	- "netcat: Address already in use"
+
+- This led me to believe that the listener is already setup on port 30000, so I just need to setup a sender command
+- The syntax for this is:
+	- netcat address port
+
+- Using this I was able to send the command:
+	- `netcat localhost 30000`
+
+	- This opened a connection, awaiting my message
+	- I sent over some fuzzed data and received the following message:
+		- *Wrong! Please enter the correct current password.*
+	- This confirmed that I set up the correct sender, so then I attempted to send the bandit14 password string
+	- After pasting in the password for bandit14 and submitting, I received the following message:
+		- *Correct!*
+		- *<bandit15_password_string>*
