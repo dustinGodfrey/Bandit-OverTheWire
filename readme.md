@@ -436,3 +436,60 @@ openssl s_client -crlf \
 - Issuing `<bandit15_password_string>` gets a return:
 	- *Correct!*
 	- *<bandit16_password_string>*
+
+
+# Level 16 - Level 17
+
+- Instructions from OverTheWire
+> The credentials for the next level can be retrieved by submitting the password of the current level to **a port on localhost in the range 31000 to 32000**. First find out which of these ports have a server listening on them. Then find out which of those speak SSL/TLS and which don’t. There is only 1 server that will give the next credentials, the others will simply send back to you whatever you send to it. **Helpful note: Getting “DONE”, “RENEGOTIATING” or “KEYUPDATE”? Read the “CONNECTED COMMANDS” section in the manpage.*
+
+- In the **Port Scanning** section of the `man nc` page, it details a command used to scan through multiple ports to check and see if they are open and running a service:
+	- `nc -z localhost 31000-32000`
+		- `-z` flag can be used to tell **nc** to report open ports, rather than initiate a connection
+
+	- This returns 5 ports and information about each:
+		- Connection to localhost (127.0.0.1) 31046 port [tcp/*] succeeded!
+		- Connection to localhost (127.0.0.1) 31518 port [tcp/*] succeeded!
+		- Connection to localhost (127.0.0.1) 31691 port [tcp/*] succeeded!
+		- Connection to localhost (127.0.0.1) 31790 port [tcp/*] succeeded!
+		- Connection to localhost (127.0.0.1) 31960 port [tcp/*] succeeded!
+
+- Using this we can use the same logic and process at the last level, using *openssl s_client*
+	- `openssl s_client -connect localhost:<port>`
+
+	- Issuing this command on each port returns important information on how to move forward:
+		- Ports 31046, 31691, and 31960 returned information confirming that these ports are open, but are not SSL/TLS connections
+		- Ports 31518 and 31790 return data like the last level, information about the SSL/TLS server and certificates. This confirms that these are the only two ports hosting SSL/TLS connections.
+
+- Since we now know the 2 ports to work with, we can try and submit the bandit16 password to each. At the bottom of each openssl s_client return there is another "read R BLOCK" prompt, awaiting our password.
+- On both of these ports, when entering the password you are met with *KEYUPDATE* and are not able to enter any credentials.
+
+- According to the "Connected Commands" section of the `man openssl` page, using the `-quiet` flag uses the command non-interactively.
+- Using this we can issue a new command to the ports:
+	- `echo "bandit16_password" | openssl s_client -connect localhost:31518 -quiet`
+		- This returns some server info, plus the bandit16 password. We know from OverTheWire instructions that the server not holding bandit17 password will just return what we typed.
+
+	- `echo "bandit16_password" | openssl s_client -connect localhost:31790 -quiet`
+		- This returns some server info, plus a flag that says "Correct!" followed by a RSA Private Key
+
+- Just like in the last level:
+	- copy the key
+	- exit back to host machine in order to ssh from outside the bandit server
+	- `echo "<copied_ssh_key>" > bandit17.key`
+	- `chmod 600 bandit17.key`
+
+- ssh into bandit17
+	- `ssh bandit17@bandit.labs.overthewire.org -p 2220 -i bandit17.key`
+
+	- Once inside you can find the bandit17 password at */etc/bandit_pass/bandit17* for easier login
+		- `cat /etc/bandit_pass/bandit17`
+
+
+
+
+
+
+
+
+
+
