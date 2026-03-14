@@ -404,3 +404,35 @@ I will be updating the repo as I continue on through the levels.
 	- After pasting in the password for bandit14 and submitting, I received the following message:
 		- *Correct!*
 		- *<bandit15_password_string>*
+
+
+# Level 15 - Level 16
+
+- Instructions from OverTheWire
+> The password for the next level can be retrieved by submitting the password of the current level to **port 30001 on localhost** using SSL/TLS encryption.
+
+- Initially, I thought I needed to use **netcat** again, since the instructions were similar, but reading the `man netcat` page it did not list anything about SSL/TLS
+
+- Under the "Helpful Reading Material" section of the OverTheWire page it links to an OpenSSL Cookbook
+
+- Reading through `man openssl` and OpenSSL cookbook showed me to use of the **openssl** argument *s_client*
+	- *s_client* implements a generic SSL/TLS client which can establish a transparent connection to a remote server speaking SSL/TLS. It is mainly used for testing services
+	- Using this information, and referring to the OpenSSL Cookbook under the "Testing with OpenSSL" section, I found the following command structure:
+
+``` bash
+
+openssl s_client -crlf \
+-connect www.feistyduck.com:443 \
+-servername www.feistyduck.com
+
+```
+
+- The `-crlf` flags just mean that it will send multiple lines of commands, but we can skip that and craft our own command
+	- `openssl s_client -connect localhost:30001`
+
+	- This successfully connects and returns info about the SSL/TLS connection, featuring server certs, verification data, information about the handshake and ciphers, a hexdump of the TLS session ticket, plus much more.
+	- At the end of the data, the service prints "read R BLOCK" and awaits input like in the previous level
+
+- Issuing `<bandit15_password_string>` gets a return:
+	- *Correct!*
+	- *<bandit_16_password_string>*
