@@ -341,3 +341,35 @@ I will be updating the repo as I continue on through the levels.
 
 - Issuing `cat data9.txt` finally reveals our password:
 	- *The password is <password_string>*
+
+
+# Level 13 - Level 14
+
+- Instructions from OverTheWire
+> The password for the next level is stored in **/etc/bandit_pass/bandit14 and can only be read by user bandit14**. For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level. Look at the commands that logged you into previous bandit levels, and find out how to use the key for this level.
+
+- Logging into Level 13 and issuing `ls` returns:
+	- *HINT*
+		- Gives more information about the level. Recommends referring back to the website and states that you cannot log into bandit14 from inside of the bandit13 machine, you must exit back to your host machine and log in from there
+	- *sshkey.private*
+		- This is the ssh private key to log into bandit14
+
+- Reading the `man ssh` page, you can use the flag `-i` to login with a file instead of a password, meaning that we will have to bring over the private key to our host machine in order to login.
+- **scp** is a way to copy files from one machine to another, given you have the proper credentials
+- Knowing this, we need to use **scp** to bring the bandit14 private key to our host machine via bandit13
+- Since we can login to bandit13 with a password, bringing over the file becomes pretty straightforward:
+	- `scp bandit13@bandit.labs.overthewire.org:~/sshkey.private <location_on_host_machine>`
+
+- Issuing `ls` on our host machine in that location shows that we have the key on our system
+- We can now attempt to login to bandit14 with this new key, using the `-i` flag:
+	- `ssh bandit14@bandit.labs.overthewire.org -p 2220 sshkey.private`
+		- But this throws an error:
+			- " WARNING: UNPROTECTED PRIVATE KEY FILE!                                                   Permissions 0640 for 'sshkey.private' are too open.                                               It is required that your private key files are NOT accessible by others.                 This private key will be ignored.                                                                                 Load key "sshkey.private": bad permissions"
+
+		- We want to reduce the permissions to the point of being protected:
+			- `chmod 600 sshkey.private`
+				- This explicitly sets the file so only the owner can read and write it, group and others have zero permissions
+
+- We can now login to bandit14 with our key with new permissions:
+	- `ssh bandit14@bandit.labs.overthewire.org -p 2220 sshkey.private`
+		- This successfully logs us in to bandit14
