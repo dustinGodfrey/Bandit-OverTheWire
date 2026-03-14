@@ -485,6 +485,30 @@ openssl s_client -crlf \
 		- `cat /etc/bandit_pass/bandit17`
 
 
+# Level 17 - Level 18
+
+- Instructions from OverTheWire
+> There are 2 files in the homedirectory: **passwords.old and passwords.new**. The password for the next level is in **passwords.new** and is the only line that has been changed between **passwords.old and passwords.new** **NOTE: if you have solved this level and see ‘Byebye!’ when trying to log into bandit18, this is related to the next level, bandit19**
+
+- Issuing `ls` in the home directory I can confirm that there are two files:
+	- *passwords.old*
+	- *passwords.new*
+
+- **diff** is a linux tool to find the difference between two files. Since there is only one password different this will be an easy search
+	- `diff passwords.new passwords.old`
+
+	- This will show two blocks of text. 
+	- *< string
+	- *---*
+	- *> string
+	
+	- The first string is what is different in *passwords.new* and the second will show what is different in *passwords.old*. We do not care what is different about the old set, so we pay attention to the first string that is displayed
+
+- Using this we can ssh into bandit18:
+	- `ssh bandit18@bandit.labs.overthewire.org -p 2220`
+
+	- When attempting to login, it will connect, then display "Byebye !". This is normal behavior per the OverTheWire instructions
+
 
 
 
