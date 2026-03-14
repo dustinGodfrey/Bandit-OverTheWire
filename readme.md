@@ -510,6 +510,18 @@ openssl s_client -crlf \
 	- When attempting to login, it will connect, then display "Byebye !". This is normal behavior per the OverTheWire instructions
 
 
+# Level 18 - 19
+
+- Instructions from OverTheWire
+> The password for the next level is stored in a file *readme* in the homedirectory. Unfortunately, someone has modified *.bashrc* to log you out when you log in with SSH.
+
+- You can use **ssh** to deliver and execute commands to another machine, granted you know the password.
+- Since we know the password, but cannot login, we will use this strategy:
+	- `ssh bandit18@bandit.labs.overthewire.org -p 2220 cat readme`
+		- Issue the bandit18 password when prompted, and it will return:
+			- *bandit19_password_string*
+
+
 
 
 
