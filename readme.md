@@ -522,6 +522,28 @@ openssl s_client -crlf \
 			- *bandit19_password_string*
 
 
+# Level 19 - Level 20
+
+- Instructions from OverTheWire
+> To gain access to the next level, you should use the setuid binary in the homedirectory. Execute it without arguments to find out how to use it. The password for this level can be found in the usual place (/etc/bandit_pass), after you have used the setuid binary.
+
+- Issuing `ls` in the home directory reveals the setuid binary
+	- *bandit20-do*
+
+- To execute, use the syntax:
+	- `./bandit20-do`
+
+	- This returns:
+		- *Run a command as another user.*
+		- *Example: ./bandit20-do whoami*
+
+- Using this we can display the password with:
+	- `./bandit20-do cat /etc/bandit_pass/bandit20`
+
+	- This returns:
+		- *<bandit20_password_string>*
+
+
 
 
 
