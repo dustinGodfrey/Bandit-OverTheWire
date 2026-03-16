@@ -543,6 +543,38 @@ openssl s_client -crlf \
 	- This returns:
 		- *<bandit20_password_string>*
 
+# Level 20 - Level 21
+
+- Instructions from OverTheWire
+> There is a setuid binary in the homedirectory that does the following: it makes a connection to localhost on the port you specify as a commandline argument. It then reads a line of text from the connection and compares it to the password in the previous level (bandit20). If the password is correct, it will transmit the password for the next level (bandit21).
+**NOTE:** Try connecting to your own network daemon to see if it works as you think
+
+- Issuing `ls` in the home directory confirms the binary *suconnect*
+- Running `/.suconnect` returns more information about usage:
+	- *Usage: ./suconnect [portnumber]*
+	- This program will connect to the given port on localhost using TCP. If it receives the correct password from the other side, the next password is transmitted back.
+
+- I initially thought that I needed to run the scan like in the last level to find all of the open ports running tcp. I did this and went through every port submitted with *./suconnect* but I had no output.
+- I referred back to the OverTheWire instructions where it states that it will read a line from the connection. This paired with the *suconnect* usage about "if it receives the correct password from the other side". This led me to think that I need to control both sides, not just rely on a server to send back information.
+
+- I know that **netcat** is used to setup listeners, so I picked a random port that was not in use and ran:
+	- `nc -l 6666`
+		- This opened up a connection, awaiting data from the other side.
+
+- In another shell, while **netcat** was still running, I ran the *suconnect* binary on this port:
+	- `./suconnect 6666`
+		- This also opened a connection, awaiting data from the other side.
+
+- In shell #1 running the **netcat** command, I issued:
+	- `<bandit20_password_string>`
+
+- In shell #2 running *suconnect*, I received back:
+	- *Read: <bandit20_password_string>*
+	- *Password matches, sending next password*
+
+- Back in shell #1 I received:
+	- *<bandit21_password_string>*
+
 
 
 
