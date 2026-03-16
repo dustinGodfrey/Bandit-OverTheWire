@@ -15,7 +15,7 @@ I will be updating the repo as I continue on through the levels.
 `ssh bandit0@bandit.labs.overthewire.org -p 2220`
 
 
-# Level 0 - Level 1
+# Level 0 -> Level 1
 
 - The first command I always run within a machine like this is `ls`. It gives a quick overview of what we are dealing with and what might be of interest to us.
 
@@ -28,7 +28,7 @@ I will be updating the repo as I continue on through the levels.
 - This shows the password for the next level.
 
 
-# Level 1 - Level 2
+# Level 1 -> Level 2
 
  - I start this level the same as the last by running the `ls` command to see what it is the current directory.
 
@@ -51,7 +51,7 @@ I will be updating the repo as I continue on through the levels.
 	- `cat /home/bandit1/-`
 
 
-# Level 2 - Level 3
+# Level 2 -> Level 3
 
 - This one solved the same way as the last one
 - Issuing `ls` shows us a file with the name *--spaces in this filename--*
@@ -59,7 +59,7 @@ I will be updating the repo as I continue on through the levels.
 	- `cat /home/bandit2/--spaces\ in\ the\ filename--`
 
 
-# Level 3 - Level 4
+# Level 3 -> Level 4
 
 - Issuing `ls` shows a directory named *inhere*
 - Moving into the directory with `cd` and issuing `ls` again shows nothing
@@ -69,7 +69,7 @@ I will be updating the repo as I continue on through the levels.
 	- `cat ./...Hiding-From-You`
 
 
-# Level 4 - Level 5
+# Level 4 -> Level 5
 
 - Issuing `ls` shows a directory named *inhere*
 - Moving into the directory with `cd` and issuing `ls` again shows 10 files:
@@ -97,7 +97,7 @@ I will be updating the repo as I continue on through the levels.
 - Issuing `tail -n +1 /home/bandit4/inhere/-file*` shows the extracted password, located in the file named *-file07*
 
 
-# Level 5 - Level 6
+# Level 5 -> Level 6
 
 - Issuing `ls` showed me another directory named *inhere*
 - changing directory `cd` into *inhere* and issuing `ls` again revealed 20 directories, named *maybehere00* through *maybehere19*
@@ -157,7 +157,7 @@ I will be updating the repo as I continue on through the levels.
 - This is the same location I found during Solution 1. Just to double check, using `cat` on that file revealed the same password I found in Solution 1.
 
 
-# Level 6 - Level 7
+# Level 6 -> Level 7
 
 - This level was solved in a similar way to the last level, with a few more steps
 - Issuing `ls` gives no files in the bandit6 home directory
@@ -179,7 +179,7 @@ I will be updating the repo as I continue on through the levels.
 - Issuing `cat ./var/lib/dpkg/info/bandit7.password` I was able to extract the correct password
 
 
-# Level 7 - Level 8
+# Level 7 -> Level 8
 
 - Issuing `ls` shows only one file, *data.txt*
 - Issuing `cat data.txt | wc -l` shows that we have 98,567 lines in this file
@@ -191,7 +191,7 @@ I will be updating the repo as I continue on through the levels.
 	- *millionth    <password_string>*
 
 
-# Level 8 - Level 9
+# Level 8 -> Level 9
 
 - Issuing `ls` shows one file, *data.txt*
 - Issuing `cat data.txt | wc -l` shows that we have 1001 lines in this file
@@ -211,7 +211,7 @@ I will be updating the repo as I continue on through the levels.
 - This gave me a list of strings, all prefixed by the number 10, except for one line that was prefixed with the number 1; this is our password string
 
 
-# Level 9 - Level 10
+# Level 9 -> Level 10
 
 - Issuing `ls` shows one file, *data.txt*
 - Per the OverTheWire documentation, the password is stored in the file as one of the few human-readable strings, preceded by several '=' characters
@@ -232,7 +232,7 @@ I will be updating the repo as I continue on through the levels.
 	- *========== <password_string>*
 
 
-# Level 10 - Level 11
+# Level 10 -> Level 11
 
 - Issuing `ls` shows one file, *data.txt*
 - `cat data.txt` shows a long string of characters, longer than our password flag usually has
@@ -243,7 +243,7 @@ I will be updating the repo as I continue on through the levels.
 	- *The password is <password_string>*
 
 
-# Level 11 - Level 12
+# Level 11 -> Level 12
 
 - Issuing `ls` shows one file, *data.txt*
 - According to OverTheWire documentation, every character in the string, both uppercase and lowercase, needs to shift 13 positions.
@@ -269,7 +269,7 @@ I will be updating the repo as I continue on through the levels.
 							- *The password is <password_string>*
  
 
-# Level 12 - Level 13
+# Level 12 -> Level 13
 
 - Instructions from OverTheWire
 > The password for the next level is stored in the file *data.txt*, which is a hexdump of a file that has been repeatedly compressed. For this level it may be useful to create a directory under /tmp in which you can work. Use `mkdir` with a hard to guess directory name. Or better, use the command `mktemp -d`. Then copy the datafile using cp, and rename it using mv (read the manpages!)
@@ -343,7 +343,7 @@ I will be updating the repo as I continue on through the levels.
 	- *The password is <password_string>*
 
 
-# Level 13 - Level 14
+# Level 13 -> Level 14
 
 - Instructions from OverTheWire
 > The password for the next level is stored in **/etc/bandit_pass/bandit14 and can only be read by user bandit14**. For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level. Look at the commands that logged you into previous bandit levels, and find out how to use the key for this level.
@@ -379,7 +379,7 @@ I will be updating the repo as I continue on through the levels.
 		- <password_string>
 
 
-# Level 14 - Level 15
+# Level 14 -> Level 15
 
 - Instructions from OverTheWire:
 > The password for the next level can be retrieved by submitting the password of the current level to **port 30000 on localhost**.
@@ -406,7 +406,7 @@ I will be updating the repo as I continue on through the levels.
 		- *<bandit15_password_string>*
 
 
-# Level 15 - Level 16
+# Level 15 -> Level 16
 
 - Instructions from OverTheWire
 > The password for the next level can be retrieved by submitting the password of the current level to **port 30001 on localhost** using SSL/TLS encryption.
@@ -438,7 +438,7 @@ openssl s_client -crlf \
 	- *<bandit16_password_string>*
 
 
-# Level 16 - Level 17
+# Level 16 -> Level 17
 
 - Instructions from OverTheWire
 > The credentials for the next level can be retrieved by submitting the password of the current level to **a port on localhost in the range 31000 to 32000**. First find out which of these ports have a server listening on them. Then find out which of those speak SSL/TLS and which don’t. There is only 1 server that will give the next credentials, the others will simply send back to you whatever you send to it. **Helpful note: Getting “DONE”, “RENEGOTIATING” or “KEYUPDATE”? Read the “CONNECTED COMMANDS” section in the manpage.*
@@ -485,7 +485,7 @@ openssl s_client -crlf \
 		- `cat /etc/bandit_pass/bandit17`
 
 
-# Level 17 - Level 18
+# Level 17 -> Level 18
 
 - Instructions from OverTheWire
 > There are 2 files in the homedirectory: **passwords.old and passwords.new**. The password for the next level is in **passwords.new** and is the only line that has been changed between **passwords.old and passwords.new** **NOTE: if you have solved this level and see ‘Byebye!’ when trying to log into bandit18, this is related to the next level, bandit19**
@@ -510,7 +510,7 @@ openssl s_client -crlf \
 	- When attempting to login, it will connect, then display "Byebye !". This is normal behavior per the OverTheWire instructions
 
 
-# Level 18 - 19
+# Level 18 -> 19
 
 - Instructions from OverTheWire
 > The password for the next level is stored in a file *readme* in the homedirectory. Unfortunately, someone has modified *.bashrc* to log you out when you log in with SSH.
@@ -522,7 +522,7 @@ openssl s_client -crlf \
 			- *bandit19_password_string*
 
 
-# Level 19 - Level 20
+# Level 19 -> Level 20
 
 - Instructions from OverTheWire
 > To gain access to the next level, you should use the setuid binary in the homedirectory. Execute it without arguments to find out how to use it. The password for this level can be found in the usual place (/etc/bandit_pass), after you have used the setuid binary.
@@ -543,7 +543,7 @@ openssl s_client -crlf \
 	- This returns:
 		- *<bandit20_password_string>*
 
-# Level 20 - Level 21
+# Level 20 -> Level 21
 
 - Instructions from OverTheWire
 > There is a setuid binary in the homedirectory that does the following: it makes a connection to localhost on the port you specify as a commandline argument. It then reads a line of text from the connection and compares it to the password in the previous level (bandit20). If the password is correct, it will transmit the password for the next level (bandit21).
