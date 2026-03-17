@@ -576,6 +576,24 @@ openssl s_client -crlf \
 	- *<bandit21_password_string>*
 
 
+# Level 21 -> 22
+
+- Instructions from OverTheWire
+> A program is running automatically at regular intervals from **cron**, the time-based job scheduler. Look in **/etc/cron.d/** for the configuration and see what command is being executed.
+
+- Issuing `ls /etc/cron.d` shows a few files, but one sticks out as being part of this level:
+	- *cronjob_bandit22*
+
+- Issuing `cat /etc/cron.d/cronjob_bandit22` reveals that this job is being ran from */usr/bin/cronjob_bandit22*
+
+- Issuing `cat /usr/bin/cronjob_bandit22` shows that the script is doing two things:
+	- Changing permissions of a /tmp/ file to 644, allowing users and groups to read
+	- Echoing the password from */etc/bandit_pass/bandit22* to that /tmp/ file
+
+- Issuing `cat /tmp/<filename>` returns:
+	- *<bandit22_password_string>*
+
+
 
 
 
