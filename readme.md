@@ -791,3 +791,47 @@ cat /etc/bandit_pass/bandit24 > /tmp/[tmpdirectory]/password
 	- *<bandit24_password_string*
 
 - This one humbled me the most of any level so far, and after completing I realized where my mistake was. I was thinking of permissions way wrong. In my head I was assuming since I could not run commands AS bandit24, which had permissions on the password file, that I would not be able to get the file back. Even though I knew that I could execute a command within the */var/spool/bandit24/foo* directory, I assumed that if bandit23 created the script that it could only work on files that bandit23 had permissions for. I was not thinking in the reverse, that I could open up permissions and have bandit24 run the script and send the output to a directory of my choosing. This really changed the way I view permissions, and I understand them exponentially more now. This was a huge learning experience, even though I was disappointed to look up a walkthrough, it was necessary for me to understand my weak points.
+
+
+# Level 24 -> Level 25
+
+- Instructions from OverTheWire
+> A daemon is listening on port 30002 and will give you the password for bandit25 if given the password for bandit24 and a secret numeric 4-digit pincode. There is no way to retrieve the pincode except by going through all of the 10000 combinations, called brute-forcing.  You do not need to create new connections each time
+
+> [!Note]
+> This level needs to take place in another temp directory. `cd $(mktemp -d)`
+- From previous levels we know that this setup is going to require the use of **netcat** to send information to this listener, in order to receive back the password.
+- I knew that we needed a file that would represent every range of passwords needed. 10000 in total ranging from *<bandit24_password_file> 0000* to *<bandit24_password_file> 9999*
+- I started by researching how to create a range of numbers in linux, and it brought me to a page that documented bash sequences. The syntax is:
+	- {start..end}
+		- There are other syntax variations but this is what we will focus on
+- Lower down the page it discussed how to make a range using a for loop, printing out each new number on its own line. Without this, every number would print on the line with the password, but we want separate lines for each one.
+- Syntax for the for loop from the documentation:
+
+```bash
+for num in {1..5}; do
+    echo "Processing item $num"
+done
+```
+
+- Using this I was able to craft a small bash script to fit our needs:
+
+```bash
+for pass in {0000..9999}; do
+	echo "<bandit24_pass> $pass"
+done
+```
+
+- Giving execute permissions and running the file, all 10000 options are printed to the screen.
+- Using this I was able to send all password combinations to a new file with:
+	- `./pass_script.sh > passfile`
+
+- Using `cat passfile`, all the passwords are printed to the screen again.
+
+- Passing this into netcat with:
+	- `nc localhost 30002 < passfile`
+		- This returns line after line stating *Wrong! Please enter the correct current password and pincode. Try again*
+		- This returns several hundred before a different line appears:
+			- *Correct! The password of user bandit25 is <bandit25_password_string>*
+
+
