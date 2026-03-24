@@ -651,5 +651,143 @@ cat /etc/bandit_pass/$myname > /tmp/$mytarget
 		- returns <bandit23_password_string>
 
 
+# Level 23 -> Level 24
 
+- Instructions from OverTheWire
+> A program is running automatically at regular intervals from **cron**, the time-based job scheduler. Look in **/etc/cron.d/** for the configuration and see what command is being executed.
+**NOTE:** This level requires you to create your own first shell-script. This is a very big step and you should be proud of yourself when you beat this level!
+**NOTE 2:** Keep in mind that your shell script is removed once executed, so you may want to keep a copy around…
 
+- `ls /etc/cron.d` shows a few files, but one in particular stands out for this level
+	- *cronjob_bandit24*
+
+- `cat /etc/cron.d/cronjob_bandit24` shows 2 settings for automatic execution
+	- *@reboot bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null*                       
+	* * * * * _bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null_
+
+	- The first line is for running the script at */usr/bin/cronjob_bandit24.sh* every reboot
+	- The second is syntax for cronjob timing. The asterisks from left to right represent:
+		- Minute (0-59)
+		- Hour (0-23)
+		- Day of the Month (0-31)
+		- Month (0-12)
+		- Day of the Week (0-7)
+
+	- An asterisk can be in the place of any number to represent 'first-last', i.e every option available.
+	- The above syntax translates to every minute of every hour of every day of every month of every week
+	- Knowing this cronjob will run */usr/bin/cronjob_bandit24.sh* once every minute, we can move on to see exactly what this script is doing.
+
+- `cat /usr/bin/cronjob_bandit24.sh` reveals the following bash script:
+
+```bash
+#!/bin/bash
+shopt -s nullglob
+myname=$(whoami)
+
+cd /var/spool/$myname/foo
+echo "Executing and deleting all scripts in /var/spool/$myname/foo:"
+for i in * .*;
+do
+    if [ "$i" != "." -a "$i" != ".." ];
+    then
+        echo "Handling $i"
+        owner="$(stat --format "%U" ./$i)"
+        if [ "${owner}" = "bandit23" ]; then
+            timeout -s 9 60 ./$i
+        fi
+        rm -f ./$i
+    fi
+done
+```
+
+- Analysis of the bash script:
+
+`shopt -s nullglob` 
+	shell options
+	-s for enable
+	nullglob - if patterns do not match, sends back nothing, instead of the repeated back pattern
+
+`myname=$(whoami)`
+	setting a variable `myname` to the result of `whoami`
+
+`cd /var/spool/$myname/foo`
+	moves into directory for current user in /var/spool
+	/var/spool/ holds data to be executed at a later time. is deleted upon execution
+
+`echo ...`
+	prints string to terminal
+
+`for i in * .*`
+	for every file in the directory and all files that the filename begins with `.`
+
+`if [ "$i" != "." -a "$i" != ".." ]`
+	if the file is not '.' or '..'
+
+`echo ...`
+	prints string to terminal
+
+`owner="$(stat --format "%U ./$i)`
+	setting variable `owner` to result of the owner of the file being executed on
+
+`if [ "${owner}" = "bandit23" ]; then
+            `timeout -s 9 60 ./$i`
+	         if the owner of the file is bandit23, execute the file `./$i`, if it does not finish within 60 seconds timeout sends a kill signal to the file
+
+`rm -f ./$i`
+	force removes the file
+
+- This one sent me down a multi-day rabbit hole. I could see one of the lines in the bash script that I would be able to execute a file within bandit24's */var/spool/bandit24/foo* directory but I could not figure out how I was going to be able to do that.
+
+- There were many permission issues that I could not seem to overcome.
+	- cannot create file
+	- cannot change permission
+	- cannot list spool directory
+
+- After a while I decided to try and create a temp directory and attempt to create inside of that. This was the key to this level, being able to create a temp directory to work out of.
+- Using `mktemp -d`, which I actually figured out it was much easier to pass that command into the `cd` command as an argument, so the command ended up being:
+	- `cd $(mktemp -d`
+
+- Once inside of the temp directory I was able to do a few things that I could not before:
+	- Create a file and use a text editor to edit it
+	- Change permissions of the file
+	- Execute the file
+
+- Since the instructions said to create a bash script, and I already had the one that bandit24 was running, I assumed that I needed to edit this script to run under user bandit23, since that is what most of the script was doing, executing based on specific users. I learned that changing the line after `timeout -s 9 60 ./$i` allowed me to execute what I wanted in the script, but this was just a distraction.
+- I spent far too long editing this script in hopes of displaying the bandit24 password from */etc/bandit_pass/bandit24*, but I kept receiving back permission errors.
+- After long enough I figured out that most of the script was not applying to anything I was doing, and just creating a regular script with only the commands I wanted was possible.
+
+- Again, I spent far too long trying to craft a script that would give me the password but I never could get it right. I felt like I was circling it for days but I just was not thinking in the right way.
+- I finally decided to look up a walkthrough in order to help me understand a little better about where the knowledge gap was.
+- The answer now is obvious, but at the time I do not believe I would have every gotten to the right answer because I was thinking of permissions in a completely wrong light.
+
+- Below are the steps to get the correct password:
+
+`cd $(mktemp -d)`
+	Creates and moves into temp directory
+
+`touch password`
+	This is the file that the password will be stored in
+
+`nano bandit24pass.sh`
+	Creates the bash script that we will get Bandit24 to run with their cronjob
+
+```bash
+#!/bin/bash
+
+cat /etc/bandit_pass/bandit24 > /tmp/[tmpdirectory]/password
+```
+
+- This script is using the same logic as the last level, output the bandit24 password to our newly created *password* file in our new temp directory. As stated in the instructions, this directory will delete upon exiting or logging out of the bandit23 vm, so keep it on your host machine if need be.
+
+`chmod 777 /tmp/[tmpdirectory] bandit24pass.sh password`
+
+- Changes the permissions of our temp directory, our bash script, and the password file so every user has access to write, read, and execute, including bandit24
+
+`cp bandit24pass.sh /var/spool/bandit24/foo/bandit24pass.sh`
+
+- This sends a copy of the bash script to the location of the files the cronjob will be executing. Remembering from the cronjob script, we are able to execute a script under our user, and we have 60 seconds to do so. This lines up perfectly with the 60 second window of each cronjob execution, which will delete our script after executing.
+
+- After sending over this script, we only need to wait less than 60 seconds for the script to run. If everything went smoothly, you should be able to run `cat password` from inside your temp directory and receive back:
+	- *<bandit24_password_string*
+
+- This one humbled me the most of any level so far, and after completing I realized where my mistake was. I was thinking of permissions way wrong. In my head I was assuming since I could not run commands AS bandit24, which had permissions on the password file, that I would not be able to get the file back. Even though I knew that I could execute a command within the */var/spool/bandit24/foo* directory, I assumed that if bandit23 created the script that it could only work on files that bandit23 had permissions for. I was not thinking in the reverse, that I could open up permissions and have bandit24 run the script and send the output to a directory of my choosing. This really changed the way I view permissions, and I understand them exponentially more now. This was a huge learning experience, even though I was disappointed to look up a walkthrough, it was necessary for me to understand my weak points.
